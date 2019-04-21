@@ -63,8 +63,8 @@ class Loader:
             "Solar Irradiance Prediction").getOrCreate()
         self.df = spark.read.csv(os.path.join(self.bucket, self.filename),
             header='true')
-        self.df = self.process_data(self.df)
-        return self.df
+        self.processed_df = self.process_data(self.df)
+        return self.processed_df
 
     def process_data(self, df):
         '''Processes the input dataframe and sets it up for regression problem
