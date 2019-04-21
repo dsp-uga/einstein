@@ -11,24 +11,19 @@ from pyspark.ml.feature import VectorAssembler, StandardScaler
 from pyspark.ml.evaluation import RegressionEvaluator
 
 
-class LinearRegression(model):
+class MultipleRegression(model):
     """
-    A class for linear regression extending an abstract class model.
+    A class for multiple linear regression extending an abstract class model.
     """
-
-    def __init__(self, something):
-        print("Init called.")
-        self.something = something
-
     def get_parameters(self):
+
         """
         A method that defines a dictionary of parameters for regression model
         
         Returns:
             A  dictionary containing all the parameters
         """
-        # TODO: to create variables for these parameters that can be initialized in __init__ method.
-        return {'maxIter': 20,'regParam': 0.5, 'elasticNetParam': 0.5, 'tol': 1e-06, 'loss': 'squaredError',\
+        return {'maxIter': 20, 'regParam': 0.5, 'elasticNetParam': 0.5, 'tol': 1e-06, 'loss': 'squaredError',
                 'epsilon': 1.35}
 
     def model_define(self):
@@ -65,30 +60,29 @@ class LinearRegression(model):
         return pipeline
 
 
-class RidgeRegression(LinearRegression):
-
+class RidgeRegression(MultipleRegression):
+    """
+    A class that inherits from MultipleRegression class and implements Ridge regression
+    """
     def get_parameters(self):
-        """
-               A method that defines a dictionary of parameters for ridge regression model by using L2 norm
+        """A method that defines a dictionary of parameters for ridge regression model by using L2 norm
 
-               Returns:
-                   A  dictionary containing all the parameters
-               """
-        # TODO: to create variables for these parameters that can be initialized in __init__ method.
-        return {'maxIter': 20, 'regParam': 0.5, 'elasticNetParam': 0.0, 'tol': 1e-06, 'loss': 'squaredError',\
+            Returns:
+            A  dictionary containing all the parameters
+        """
+        return {'maxIter': 20, 'regParam': 0.5, 'elasticNetParam': 0.0, 'tol': 1e-06, 'loss': 'squaredError',
                 'epsilon': 1.35}
 
 
-class LassoRegression(LinearRegression):
-
+class LassoRegression(MultipleRegression):
+    """
+    A class that inherits from MultipleRegression class and implements Lasso regression
+    """
     def get_parameters(self):
+        """A method that defines a dictionary of parameters for lasso regression model by using L1 norm
+
+           Returns:
+           A  dictionary containing all the parameters
         """
-               A method that defines a dictionary of parameters for lasso regression model by using L1 norm
-
-               Returns:
-                   A  dictionary containing all the parameters
-               """
-        # TODO: to create variables for these parameters that can be initialized in __init__ method.
-        return {'maxIter': 20, 'regParam': 0.5, 'elasticNetParam': 1.0, 'tol': 1e-06, 'loss': 'squaredError', \
+        return {'maxIter': 20, 'regParam': 0.5, 'elasticNetParam': 1.0, 'tol': 1e-06, 'loss': 'squaredError',
                 'epsilon': 1.35}
-
