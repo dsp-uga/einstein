@@ -5,6 +5,7 @@ by all regression models
 
 
 from abc import ABC, abstractmethod
+from pyspark.ml.evaluation import RegressionEvaluator
 
 
 class Model(ABC):
@@ -17,7 +18,7 @@ class Model(ABC):
     
     @abstractmethod
     def get_parameters(self):
-         """An abstract method which needs to be declared in subclasses
+        """An abstract method which needs to be declared in subclasses
         This method is used to declare different parameters for methods
         in subclasses
         
@@ -58,13 +59,13 @@ class Model(ABC):
         Returns:
             Metric value
         """
-        pipeline = flow()
+        pipeline = self.flow()
         model = pipeline.fit(train_data)
         predictions = model.transform(test_data)
         predictions = predictions['prediction', 'label']
-        return get_accuracy(predictions)
+        return self.get_accuracy(predictions)
 
-    def get_accuracy(self, predictions, metric_name = 'rmse'):
+    def get_accuracy(self, predictions, metric_name='rmse'):
         """A method to calculate the selected metric value
 
         Args:
@@ -72,8 +73,8 @@ class Model(ABC):
         Returns:
             Metric value
         """
-        evaluator = RegressionEvaluator(labelCol=label,
-                                        predictionCol=prediction,
-                                        metricName = metric_name)
+        evaluator = RegressionEvaluator(labelCol='label',
+                                        predictionCol='prediction',
+                                        metricName=metric_name)
         metric_answer = evaluator.evaluate(predictions)
         return metric_answer

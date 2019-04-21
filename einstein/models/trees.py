@@ -68,7 +68,7 @@ class RF(Model):
 
         Returns:
             A  dictionary containing all the parameters
-        """-
+        """
         parameter_dict = {"featuresCol": "scaledFeatures",
                           "numTrees": 20,
                           "maxDepth": 4,
