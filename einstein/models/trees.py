@@ -30,10 +30,11 @@ class DecisionTree(Model):
     def get_parameters(self, **user_params):
         """Declares a dictionary of hyperparameters for Regression.
 
+        Args:
+          **user_params:
+            key word arguments of user defined parameters
         Returns:
             A  dictionary containing all the parameters
-        **user_params:
-          key word arguments of user defined parameters
         """
         parameter_dict = {"featuresCol": "scaledFeatures",
                           "maxDepth": 4,
@@ -71,10 +72,11 @@ class RF(Model):
     def get_parameters(self, **user_params):
         """Declares a dictionary of hyperparameters for Regression.
 
+        Args:
+          **user_params:
+            key word arguments of user defined parameters
         Returns:
             A  dictionary containing all the parameters
-        **user_params:
-          key word arguments of user defined parameters
         """
         parameter_dict = {"featuresCol": "scaledFeatures",
                           "numTrees": 20,
@@ -114,10 +116,11 @@ class GBT(Model):
     def get_parameters(self, **user_params):
         """Declares a dictionary of hyperparameters for Regression.
 
+        Args:
+          **user_params:
+            key word arguments of user defined parameters
         Returns:
             A  dictionary containing all the parameters
-        **user_params:
-          key word arguments of user defined parameters
         """
         parameter_dict = {"featuresCol": "scaledFeatures",
                           "maxDepth": 4,
