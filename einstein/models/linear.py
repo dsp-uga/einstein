@@ -1,98 +1,89 @@
 """
 A script to implement regression models
 """
-import org.apache.spark.ml.regression.LinearRegression
-from pyspark.ml import Pipeline
-from pyspark.ml.feature import Normalizer
+from pyspark.ml.regression import LinearRegression
+from base import Model
 
-class LinearRegression(model): 
-	"""A class for linear regression extending an abstract class model.
-    Args:
-        model: an Abstract Class defined in base.py
+
+class LinearRegressor(Model):
+    """A class for multiple linear regression extending an abstract class model.
     """
-	
-	def __init__(self, something):
-		print("Init called.")
-		self.something = something
-		
-    def get_parameters(self):
-         """A method that defines a dictionary of parameters for regression model
-        
+    def __init__(self, input_cols, **kwargs):
+        """Initialises the class.
+
+        Args:
+            input_cols(list):
+                A list of all the input column names
+            **kwargs:
+                keyword arguments of user defined parameters
+        """
+        self.input_cols = input_cols
+        self.kwargs = kwargs
+        self.metrics = ["r2", "mae", "rmse"]
+
+    def get_parameters(self, **user_params):
+        """A method that defines a dictionary of parameters for regression model
+
+        Args:
+          **user_params:
+            key word arguments of user defined parameters
         Returns:
             A  dictionary containing all the parameters
         """
-		# TODO: to create variables for these parameters that can be initialized in __init__ method. 
-		parameter_dict={}
-		parameter_dict["maxIter"]=10
-		parameter_dict["featuresCol"]='features'
-		parameter_dict["labelCol"]='label'
-		parameter_dict["predictionCol"]='prediction'
-		parameter_dict["regParam"]=0.0
-		parameter_dict["elasticNetParam"]=0.0
-		parameter_dict["tol"]=1e-06
-		parameter_dict["fitIntercept"]=True
-		parameter_dict["standardization"]=True
-		parameter_dict["solver"]='auto'
-		parameter_dict["weightCol"]=None
-		parameter_dict["aggregationDepth"]=2
-		parameter_dict["loss"]='squaredError'
-		parameter_dict["epsilon"]=1.35
-		return parameter_dict 
-		
-        
-    
-	def model_define(self,parameter_dict):
+        parameter_dict = {'maxIter': 20, 'regParam': 0.5,
+                          'elasticNetParam': 0.5, 'tol': 1e-06,
+                          'loss': 'squaredError', 'epsilon': 1.35}
+        parameter_dict.update(**user_params)
+        return parameter_dict
+
+    def model_define(self):
         """A method which defines the linear regression model
-        
-        Returns:
-            A linear regression model 
-        """
-        lr = LinearRegression(**parameter_dict)
-		
-		return lr
 
-    
-    def flow(self):
-        """A method that defines a pipeline
-        
         Returns:
-            A pipeline that the model needs to follow
+            A linear regression model
         """
-		# TODO: define boolean global variables for each transformation and estimation 
-		# TODO: make if else statements based on the booleans.
-		
-		normalizer = Normalizer(inputCol="features", outputCol="normFeatures", p=1.0)
-		
-		pipeline = Pipeline(stages=[normalizer])
-		
-        return pipeline 
+        params = self.get_parameters(**self.kwargs)
+        lr = LinearRegression(**params)
+        return lr
 
-    def fit_transform(self, train_data, test_data):
-        """A method to train the model and do predictions.
-        a function for calculating the metric value is called
+
+class RidgeRegressor(LinearRegressor):
+    """A class that inherits from LinearRegressor class and implements
+    Ridge regression
+    """
+    def get_parameters(self, **user_params):
+        """A method that defines a dictionary of parameters for ridge
+        regression model by using L2 norm
 
         Args:
-            train_data: the data on which the model should be trained
-            train_data: the data on which the predictions are to be made
+          **user_params:
+            key word arguments of user defined parameters
         Returns:
-            Metric value
+            A  dictionary containing all the parameters
         """
-        pipeline = flow()
-        model = pipeline.fit(train_data)
-        predictions = model.transform(test_data)
-        predictions = predictions['prediction', 'label']
-        return get_accuracy(predictions)
+        parameter_dict = {'maxIter': 20, 'regParam': 0.5,
+                          'elasticNetParam': 0.0, 'tol': 1e-06,
+                          'loss': 'squaredError', 'epsilon': 1.35}
+        parameter_dict.update(**user_params)
+        return parameter_dict
 
-    def get_accuracy(self, predictions, metric_name = 'rmse'):
-        """A method to calculate the selected metric value
+
+class LassoRegressor(LinearRegressor):
+    """A class that inherits from LinearRegressor class and implements
+    Lasso regression
+    """
+    def get_parameters(self, **user_params):
+        """A method that defines a dictionary of parameters for lasso
+        regression model by using L1 norm
 
         Args:
-            predictions: a dataframe containing prediction and label
+          **user_params:
+            key word arguments of user defined parameters
         Returns:
-            Metric value
+            A  dictionary containing all the parameters
         """
-        evaluator = RegressionEvaluator(labelCol=label,
-                                        predictionCol=prediction,
-                                        metricName = metric_name)
-        metric_answer = evaluator.evaluate(predictions)
-        return metric_answer
+        parameter_dict = {'maxIter': 20, 'regParam': 0.5,
+                          'elasticNetParam': 1.0, 'tol': 1e-06,
+                          'loss': 'squaredError', 'epsilon': 1.35}
+        parameter_dict.update(**user_params)
+        return parameter_dict
