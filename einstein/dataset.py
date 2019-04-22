@@ -110,7 +110,7 @@ class Loader:
         '''
         columns = df.columns
         columns.remove('label')
-        return columns[: -1]
+        return columns
 
 
 class _Fetcher:
