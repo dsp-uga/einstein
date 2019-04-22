@@ -3,7 +3,7 @@ import pyspark.sql
 from einstein.dataset import Loader
 from einstein.models.linear import (LinearRegressor, RidgeRegressor,
     LassoRegressor)
-from einstein.models.trees import DTRegressor, RFRegressor, GBTRegressor
+from einstein.models.trees import DTRegressor, RFRegressor, GBTreeRegressor
 from einstein.utils.summary_table import draw
 
 
@@ -85,25 +85,31 @@ def run(args=None):
         subprocess.call("python -m pytest", shell=True)
     else:
         if args.model == "mlr":
+            model_name = 'Linear Regression'
             regressor = LinearRegressor(input_cols, maxIter=args.maxIter,
                 regParam=args.regParam, tol=args.tol, loss=args.loss,
                 epsion=args.epsilon)
         elif args.model == "rr":
+            model_name = 'Ridge Regression'
             regressor = RidgeRegressor(input_cols, maxIter=args.maxIter,
                 regParam=args.regParam, tol=args.tol, loss=args.loss,
                 epsion=args.epsilon)
         elif args.model == "lr":
+            model_name = 'Lasso Regression'
             regressor = LassoRegressor(input_cols, maxIter=args.maxIter,
                 regParam=args.regParam, tol=args.tol, loss=args.loss,
                 epsion=args.epsilon)
         elif args.model == "dt":
+            model_name = 'Decision Tree'
             regressor = DTRegressor(input_cols, maxDepth=args.maxDepth,
                 maxBins=args.maxBins)
         elif args.model == "rf":
+            model_name = 'Random Forest'
             regressor = RFRegressor(input_cols, numTrees=args.numTrees,
                 maxDepth=args.maxDepth, maxBins=args.maxBins)
         elif args.model == "gbt":
-            regressor = GBTRegressor(input_cols, maxDepth=args.maxDepth,
+            model_name = 'Gradient Boost Tree'
+            regressor = GBTreeRegressor(input_cols, maxDepth=args.maxDepth,
                 maxIter=args.maxIter, maxBins=args.maxBins)
 
         train_df, test_df = df.randomSplit([0.9, 0.1], seed=100)
@@ -113,7 +119,7 @@ def run(args=None):
         metrics = {'r-Squared': r2, 'Mean Absolute Error': mae,
         'Root Mean Squared Error': rmse}
         # Print the Regression Statistics Summary
-        draw(args.year, args.target_hr, args.grid, args.model, metrics)
+        draw(args.year, args.target_hr, args.grid, model_name, metrics)
 
 
 if __name__ == '__main__':
