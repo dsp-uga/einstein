@@ -9,7 +9,7 @@ from pyspark.ml.regression import (RandomForestRegressor,
 from base import Model
 
 
-class DecisionTree(Model):
+class DTRegressor(Model):
     """Subclasses base :class: `Model` to initialize a Decision Tree Regressor
     """
     def __init__(self, input_cols, **kwargs):
@@ -51,7 +51,7 @@ class DecisionTree(Model):
         return DecisionTreeRegressor(**params)
 
 
-class RF(Model):
+class RFRegressor(Model):
     """Subclasses base :class: `Model` to initialize a Random Forest Regressor
     """
     def __init__(self, input_cols, **kwargs):
@@ -64,7 +64,7 @@ class RF(Model):
                 keyword arguments of user defined parameters
         """
         self.input_cols = input_cols
-        self.kwargs = kwargs
+        self.kwargs = kwargs        
         self.metrics = ["r2", "mae", "rmse"]
 
     def get_parameters(self, **user_params):
@@ -94,7 +94,7 @@ class RF(Model):
         return RandomForestRegressor(**params)
 
 
-class GBT(Model):
+class GBTreeRegressor(Model):
     """Subclasses base :class: `Model` to initialize a Gradient Boost Tree
     Regressor.
     """

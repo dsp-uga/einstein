@@ -5,7 +5,7 @@ from pyspark.ml.regression import LinearRegression
 from base import Model
 
 
-class MultipleRegression(Model):
+class LinearRegressor(Model):
     """A class for multiple linear regression extending an abstract class model.
     """
     def __init__(self, input_cols, **kwargs):
@@ -47,8 +47,8 @@ class MultipleRegression(Model):
         return lr
 
 
-class RidgeRegression(MultipleRegression):
-    """A class that inherits from MultipleRegression class and implements
+class RidgeRegressor(LinearRegressor):
+    """A class that inherits from LinearRegressor class and implements
     Ridge regression
     """
     def get_parameters(self, **user_params):
@@ -68,8 +68,8 @@ class RidgeRegression(MultipleRegression):
         return parameter_dict
 
 
-class LassoRegression(MultipleRegression):
-    """A class that inherits from MultipleRegression class and implements
+class LassoRegressor(LinearRegressor):
+    """A class that inherits from LinearRegressor class and implements
     Lasso regression
     """
     def get_parameters(self, **user_params):
