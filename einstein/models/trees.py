@@ -3,28 +3,42 @@ A Script to implement Regression using Trees
 """
 
 
-from pyspark.ml.feature import VectorAssembler, StandardScaler
 from pyspark.ml.regression import RandomForestRegressor,\
                                   DecisionTreeRegressor,\
                                   GBTRegressor
 from pyspark.sql.session import SparkSession
 from pyspark import SparkConf, SparkContext
-from pyspark.ml import Pipeline
 from base import Model
 
 
 class DecisionTree(Model):
     """Subclasses base :class: `Model` to initialize a Decision Tree Regressor
     """
-    def get_parameters(self):
+    def __init__(self, input_cols, **kwargs):
+        """Initialises the class.
+
+        Args:
+            input_cols(list):
+                A list of all the input column names
+            **kwargs:
+                keyword arguments of user defined parameters
+        """
+        self.input_cols = input_col
+        self.kwargs = kwargs
+        self.metrics = ["r2", "mae", "rmse"]
+
+    def get_parameters(self, **user_params):
         """Declares a dictionary of hyperparameters for Regression.
 
         Returns:
             A  dictionary containing all the parameters
+        **user_params:
+          key word arguments of user defined parameters
         """
         parameter_dict = {"featuresCol": "scaledFeatures",
                           "maxDepth": 4,
                           "maxBins": 32}
+        parameter_dict.update(**user_params)
         return parameter_dict
 
     def model_define(self):
@@ -32,47 +46,41 @@ class DecisionTree(Model):
         `get_parameters`.
 
         Returns:
-            A regression model
+            A Decision Tree Regression model
         """
-        params = self.get_parameters()
+        params = self.get_parameters(**self.kwargs)
         return DecisionTreeRegressor(**params)
-
-    def flow(self):
-        """Defines a pipeline that tracks the sequence of transformations to
-        perform on the data.
-
-        Returns:
-            Pipeline
-        """
-        assembler = VectorAssembler(inputCols=["cylinders",
-                                               "displacement",
-                                               "horsepower",
-                                               "weight",
-                                               "acceleration",
-                                               "model year",
-                                               "origin"],
-                                    outputCol="features")
-        scaler = StandardScaler(inputCol="features",
-                                outputCol="scaledFeatures",
-                                withStd=True, withMean=True)
-        model = self.model_define()
-        pipeline = Pipeline(stages=[assembler, scaler, model])
-        return pipeline
 
 
 class RF(Model):
     """Subclasses base :class: `Model` to initialize a Random Forest Regressor
     """
-    def get_parameters(self):
+    def __init__(self, input_cols, **kwargs):
+        """Initialises the class.
+
+        Args:
+            input_cols(list):
+                A list of all the input column names
+            **kwargs:
+                keyword arguments of user defined parameters
+        """
+        self.input_cols = input_col
+        self.kwargs = kwargs
+        self.metrics = ["r2", "mae", "rmse"]
+
+    def get_parameters(self, **user_params):
         """Declares a dictionary of hyperparameters for Regression.
 
         Returns:
             A  dictionary containing all the parameters
+        **user_params:
+          key word arguments of user defined parameters
         """
         parameter_dict = {"featuresCol": "scaledFeatures",
                           "numTrees": 20,
                           "maxDepth": 4,
                           "maxBins": 32}
+        parameter_dict.update(**user_params)
         return parameter_dict
 
     def model_define(self):
@@ -80,48 +88,42 @@ class RF(Model):
         `get_parameters`.
 
         Returns:
-            A regression model
+            A Random Forest Regression model
         """
-        params = self.get_parameters()
+        params = self.get_parameters(**self.kwargs)
         return RandomForestRegressor(**params)
-
-    def flow(self):
-        """Defines a pipeline that tracks the sequence of transformations to
-        perform on the data.
-
-        Returns:
-            Pipeline
-        """
-        assembler = VectorAssembler(inputCols=["cylinders",
-                                               "displacement",
-                                               "horsepower",
-                                               "weight",
-                                               "acceleration",
-                                               "model year",
-                                               "origin"],
-                                    outputCol="features")
-        scaler = StandardScaler(inputCol="features",
-                                outputCol="scaledFeatures",
-                                withStd=True, withMean=True)
-        model = self.model_define()
-        pipeline = Pipeline(stages=[assembler, scaler, model])
-        return pipeline
 
 
 class GBT(Model):
     """Subclasses base :class: `Model` to initialize a Gradient Boost Tree
     Regressor.
     """
-    def get_parameters(self):
+    def __init__(self, input_cols, **kwargs):
+        """Initialises the class.
+
+        Args:
+            input_cols(list):
+                A list of all the input column names
+            **kwargs:
+                keyword arguments of user defined parameters
+        """
+        self.input_cols = input_col
+        self.kwargs = kwargs
+        self.metrics = ["r2", "mae", "rmse"]
+
+    def get_parameters(self, **user_params):
         """Declares a dictionary of hyperparameters for Regression.
 
         Returns:
             A  dictionary containing all the parameters
+        **user_params:
+          key word arguments of user defined parameters
         """
         parameter_dict = {"featuresCol": "scaledFeatures",
                           "maxDepth": 4,
                           "maxIter": 10,
                           "maxBins": 32}
+        parameter_dict.update(**user_params)
         return parameter_dict
 
     def model_define(self):
@@ -129,29 +131,7 @@ class GBT(Model):
         `get_parameters`.
 
         Returns:
-            A regression model
+            A Gradient Boosting Tree Regression model
         """
-        params = self.get_parameters()
+        params = self.get_parameters(**self.kwargs)
         return GBTRegressor(**params)
-
-    def flow(self):
-        """Defines a pipeline that tracks the sequence of transformations to
-        perform on the data.
-
-        Returns:
-            Pipeline
-        """
-        assembler = VectorAssembler(inputCols=["cylinders",
-                                               "displacement",
-                                               "horsepower",
-                                               "weight",
-                                               "acceleration",
-                                               "model year",
-                                               "origin"],
-                                    outputCol="features")
-        scaler = StandardScaler(inputCol="features",
-                                outputCol="scaledFeatures",
-                                withStd=True, withMean=True)
-        model = self.model_define()
-        pipeline = Pipeline(stages=[assembler, scaler, model])
-        return pipeline
