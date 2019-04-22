@@ -64,16 +64,13 @@ class Model(ABC):
             train_data: the data on which the model should be trained
             test_data: the data on which the predictions are to be made
         Returns:
-            Metric value
+            A list containing metric values ["r2", "mae", "rmse"]
         """
         pipeline = self.flow()
         model = pipeline.fit(train_data)
         predictions = model.transform(test_data)
         predictions = predictions['prediction', 'label']
-        # predictions.show()
-        accuracy = self.get_accuracy(predictions)
-        # print("R-Squared=", accuracy)
-        print(accuracy)
+        return self.get_accuracy(predictions)  
 
     def get_accuracy(self, predictions):
         """A method to calculate the selected metric value
@@ -81,7 +78,7 @@ class Model(ABC):
         Args:
             predictions: a dataframe containing prediction and label
         Returns:
-            Metric value
+            A list containing metric values ["r2", "mae", "rmse"]
         """
         metric_list = []
         for metric_name in self.metrics:
