@@ -64,6 +64,7 @@ class Loader:
         self.df = spark.read.csv(os.path.join(self.bucket, self.filename),
             header='true')
         self.processed_df = self.process_data(self.df)
+        self.input_cols, self.label = self.io_columns(self.processed_df)
         return self.processed_df
 
     def process_data(self, df):
@@ -89,6 +90,22 @@ class Loader:
         for non_target_col in non_target_cols:
             df = df.drop(non_target_col)
         return df
+
+    def io_columns(self, df):
+        '''Returns list of input columns and label of the dataset
+
+        Arguments:
+            df (Spark DataFrame):
+                Dataframe of dataset, whose input-output column names need
+                to be retrieved
+
+        Returns:
+            list, str:
+                List of input column names; String representing output column
+                name
+        '''
+        columns = df.columns
+        return columns[: -1], columns[-1] 
 
 
 class _Fetcher:
