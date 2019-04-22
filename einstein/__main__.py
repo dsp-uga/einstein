@@ -1,8 +1,8 @@
 import argparse
 import pyspark.sql
 from einstein.dataset import Loader
-from einstein.models.linear import (MultipleRegression, RidgeRegression,
-    LassoRegression)
+from einstein.models.linear import (LinearRegressor, RidgeRegressor,
+    LassoRegressor)
 from einstein.models.trees import DTRegressor, RFRegressor, GBTRegressor
 from einstein.utils.summary_table import draw
 
@@ -85,15 +85,15 @@ def run(args=None):
         subprocess.call("python -m pytest", shell=True)
     else:
         if args.model == "mlr":
-            regressor = MultipleRegression(input_cols, maxIter=args.maxIter,
+            regressor = LinearRegressor(input_cols, maxIter=args.maxIter,
                 regParam=args.regParam, tol=args.tol, loss=args.loss,
                 epsion=args.epsilon)
         elif args.model == "rr":
-            regressor = RidgeRegression(input_cols, maxIter=args.maxIter,
+            regressor = RidgeRegressor(input_cols, maxIter=args.maxIter,
                 regParam=args.regParam, tol=args.tol, loss=args.loss,
                 epsion=args.epsilon)
         elif args.model == "lr":
-            regressor = LassoRegression(input_cols, maxIter=args.maxIter,
+            regressor = LassoRegressor(input_cols, maxIter=args.maxIter,
                 regParam=args.regParam, tol=args.tol, loss=args.loss,
                 epsion=args.epsilon)
         elif args.model == "dt":
