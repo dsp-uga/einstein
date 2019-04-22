@@ -58,6 +58,8 @@ def get_parser():
         shape parameter to control the amount of robustness (must be > 1.0) \
         - parameter for Multiple Regression, Ridge Regression, Lasso \
         Regression')
+    parser.add_argument('--test', dest='test', type=bool, default=False,
+        choices=[True, False], help='To run the test suite')
     return parser
 
 
@@ -78,36 +80,40 @@ def run(args=None):
     df = loader.load_data()
     input_cols = loader.input_cols
 
-    if args.model == "mlr":
-        regressor = MultipleRegression(input_cols, maxIter=args.maxIter,
-            regParam=args.regParam, tol=args.tol, loss=args.loss,
-            epsion=args.epsilon)
-    elif args.model == "rr":
-        regressor = RidgeRegression(input_cols, maxIter=args.maxIter,
-            regParam=args.regParam, tol=args.tol, loss=args.loss,
-            epsion=args.epsilon)
-    elif args.model == "lr":
-        regressor = LassoRegression(input_cols, maxIter=args.maxIter,
-            regParam=args.regParam, tol=args.tol, loss=args.loss,
-            epsion=args.epsilon)
-    elif args.model == "dt":
-        regressor = DTRegressor(input_cols, maxDepth=args.maxDepth,
-            maxBins=args.maxBins)
-    elif args.model == "rf":
-        regressor = RFRegressor(input_cols, numTrees=args.numTrees,
-            maxDepth=args.maxDepth, maxBins=args.maxBins)
-    elif args.model == "gbt":
-        regressor = GBTRegressor(input_cols, maxDepth=args.maxDepth,
-            maxIter=args.maxIter, maxBins=args.maxBins)
+    if args.test:
+        print('Running test suite...')
+        subprocess.call("python -m pytest", shell=True)
+    else:
+        if args.model == "mlr":
+            regressor = MultipleRegression(input_cols, maxIter=args.maxIter,
+                regParam=args.regParam, tol=args.tol, loss=args.loss,
+                epsion=args.epsilon)
+        elif args.model == "rr":
+            regressor = RidgeRegression(input_cols, maxIter=args.maxIter,
+                regParam=args.regParam, tol=args.tol, loss=args.loss,
+                epsion=args.epsilon)
+        elif args.model == "lr":
+            regressor = LassoRegression(input_cols, maxIter=args.maxIter,
+                regParam=args.regParam, tol=args.tol, loss=args.loss,
+                epsion=args.epsilon)
+        elif args.model == "dt":
+            regressor = DTRegressor(input_cols, maxDepth=args.maxDepth,
+                maxBins=args.maxBins)
+        elif args.model == "rf":
+            regressor = RFRegressor(input_cols, numTrees=args.numTrees,
+                maxDepth=args.maxDepth, maxBins=args.maxBins)
+        elif args.model == "gbt":
+            regressor = GBTRegressor(input_cols, maxDepth=args.maxDepth,
+                maxIter=args.maxIter, maxBins=args.maxBins)
 
-    train_df, test_df = df.randomSplit([0.9, 0.1], seed=100)
-    flow = regressor.flow()
-    r2, mae, rmse = regressor.fit_transform(train_df, test_df)
+        train_df, test_df = df.randomSplit([0.9, 0.1], seed=100)
+        flow = regressor.flow()
+        r2, mae, rmse = regressor.fit_transform(train_df, test_df)
 
-    metrics = {'r-Squared': r2, 'Mean Absolute Error': mae,
-    'Root Mean Squared Error': rmse}
-    # Print the Regression Statistics Summary
-    draw(args.year, args.target_hr, args.grid, args.model, metrics)
+        metrics = {'r-Squared': r2, 'Mean Absolute Error': mae,
+        'Root Mean Squared Error': rmse}
+        # Print the Regression Statistics Summary
+        draw(args.year, args.target_hr, args.grid, args.model, metrics)
 
 
 if __name__ == '__main__':
