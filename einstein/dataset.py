@@ -64,7 +64,7 @@ class Loader:
         self.df = spark.read.csv(os.path.join(self.bucket, self.filename),
             header='true')
         self.processed_df = self.process_data(self.df)
-        self.input_cols, self.label = self.io_columns(self.processed_df)
+        self.input_cols = self.get_input_columns(self.processed_df)
         return self.processed_df
 
     def process_data(self, df):
@@ -79,20 +79,25 @@ class Loader:
                 offset hours, and renaming the target offset hour column
         '''
         temp = [('y' + str(hr)) for hr in range(1, 25)]
+        label = 'y' + str(self.target_hour)
         target_cols = copy.deepcopy(temp)
         temp.remove('y' + str(self.target_hour))
         non_target_cols = temp
         df_cols = df.columns
 
+        # Renaming target offset hour column names
         for index, target_col in enumerate(target_cols[::-1]):
-            df = df.withColumnRenamed(df_cols[-1 - index], target_col)
+            if target_col == label:
+                df = df.withColumnRenamed(df_cols[-1 - index], 'label')
+            else:
+                df = df.withColumnRenamed(df_cols[-1 - index], target_col)
 
         for non_target_col in non_target_cols:
             df = df.drop(non_target_col)
         return df
 
-    def io_columns(self, df):
-        '''Returns list of input columns and label of the dataset
+    def get_input_columns(self, df):
+        '''Returns list of input columns
 
         Arguments:
             df (Spark DataFrame):
@@ -100,12 +105,12 @@ class Loader:
                 to be retrieved
 
         Returns:
-            list, str:
-                List of input column names; String representing output column
-                name
+            list:
+                List of input column names
         '''
         columns = df.columns
-        return columns[: -1], columns[-1] 
+        remove columns['label']
+        return columns[: -1]
 
 
 class _Fetcher:
