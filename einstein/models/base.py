@@ -70,7 +70,7 @@ class Model(ABC):
         model = pipeline.fit(train_data)
         predictions = model.transform(test_data)
         predictions = predictions['prediction', 'label']
-        return self.get_accuracy(predictions)  
+        return self.get_accuracy(predictions)
 
     def get_accuracy(self, predictions):
         """A method to calculate the selected metric value

@@ -3,11 +3,9 @@ A Script to implement Regression using Trees
 """
 
 
-from pyspark.ml.regression import RandomForestRegressor,\
-                                  DecisionTreeRegressor,\
-                                  GBTRegressor
-from pyspark.sql.session import SparkSession
-from pyspark import SparkConf, SparkContext
+from pyspark.ml.regression import (RandomForestRegressor,
+                                   DecisionTreeRegressor,
+                                   GBTRegressor)
 from base import Model
 
 
@@ -23,7 +21,7 @@ class DecisionTree(Model):
             **kwargs:
                 keyword arguments of user defined parameters
         """
-        self.input_cols = input_col
+        self.input_cols = input_cols
         self.kwargs = kwargs
         self.metrics = ["r2", "mae", "rmse"]
 
@@ -65,7 +63,7 @@ class RF(Model):
             **kwargs:
                 keyword arguments of user defined parameters
         """
-        self.input_cols = input_col
+        self.input_cols = input_cols
         self.kwargs = kwargs
         self.metrics = ["r2", "mae", "rmse"]
 
@@ -109,7 +107,7 @@ class GBT(Model):
             **kwargs:
                 keyword arguments of user defined parameters
         """
-        self.input_cols = input_col
+        self.input_cols = input_cols
         self.kwargs = kwargs
         self.metrics = ["r2", "mae", "rmse"]
 

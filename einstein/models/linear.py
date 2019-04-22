@@ -17,7 +17,7 @@ class MultipleRegression(Model):
             **kwargs:
                 keyword arguments of user defined parameters
         """
-        self.input_cols = input_col
+        self.input_cols = input_cols
         self.kwargs = kwargs
         self.metrics = ["r2", "mae", "rmse"]
 
