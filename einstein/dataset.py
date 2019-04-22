@@ -109,7 +109,7 @@ class Loader:
                 List of input column names
         '''
         columns = df.columns
-        remove columns['label']
+        columns.remove('label')
         return columns[: -1]
 
 
