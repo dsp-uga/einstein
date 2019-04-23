@@ -1,4 +1,8 @@
+import findspark
+findspark.init()
+
 import argparse
+import subprocess
 import pyspark.sql
 from einstein.dataset import Loader
 from einstein.models.linear import (LinearRegressor, RidgeRegressor,
@@ -21,13 +25,12 @@ def get_parser():
         Ridge Regression, Lasso Regression, Decision Trees, Random Forests,\
         Gradient Boost Trees')
     parser.add_argument('--grid', dest='grid', default='3', type=str,
-        choices=['1', '3', '5'], help='1 -> (1, 1) Grid Size;\
-        3 -> (3, 3) Grid Size; 5 -> (5, 5) Grid Size',
-        help='Grid sizes around ATHENS location')
-    parser.add_argument('--bucket', dest='bucket', type = str,
+        choices=['1', '3', '5'], help='1 -> (1, 1) ; 3 -> (3, 3); 5 -> (5, 5)\
+        \nGrid Size - Grid sizes around ATHENS location')
+    parser.add_argument('--bucket', dest='bucket', type=str,
         default='gs://uga_dsp_sp19/',
         help='Google Storage Bucket address containing the dataset')
-    parser.add_argument('--year', dest='year', default='2017', type='str',
+    parser.add_argument('--year', dest='year', default='2017', type=str,
         choices=['2017', '2018', '2017_2018'], help='NAM-NMM data year range')
     parser.add_argument('--target_hr', dest='target_hr', default=1, type=int,
         choices=[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12,
@@ -39,7 +42,7 @@ def get_parser():
     parser.add_argument('--maxBins', dest='maxBins', type=int,
         help='Number of bins used for discretizing continuous features -\
         parameter for Decision Trees, Random Forests, Gradient Boost Trees')
-    parser.add_argument('--numTrees', dest='numTrees', type=int.
+    parser.add_argument('--numTrees', dest='numTrees', type=int,
         help='Number of trees in the ensemble - parameter for Random \
         Forests.')
     parser.add_argument('--maxIter', dest='maxIter', type=int,
@@ -48,7 +51,7 @@ def get_parser():
     parser.add_argument('--tol', dest='tol', type=float, help='Convergence \
         tolerance for iterative algorithms - parameter for Multiple \
         Regression, Ridge Regression, Lasso Regression')
-    parser.add_argument('--regParam', dest='restParam', type=float,
+    parser.add_argument('--regParam', dest='regParam', type=float,
         help='Regularization parameter - parameter for Multiple Regression, \
         Ridge Regression, Lasso Regression')
     parser.add_argument('--loss', dest='loss', type=str, help='Loss function \
@@ -73,7 +76,7 @@ def run(args=None):
     '''
     parser = get_parser()
     args = parser.parse_args()
-    filename = f'{args.year}_({args.grid},{args.grid}).csv'
+    filename = f'{args.year}_({args.grid},{args.grid})_a.csv'
 
     loader = Loader(target_hour=args.target_hr, bucket=args.bucket,
         filename=filename)
@@ -88,17 +91,17 @@ def run(args=None):
             model_name = 'Linear Regression'
             regressor = LinearRegressor(input_cols, maxIter=args.maxIter,
                 regParam=args.regParam, tol=args.tol, loss=args.loss,
-                epsion=args.epsilon)
+                epsilon=args.epsilon)
         elif args.model == "rr":
             model_name = 'Ridge Regression'
             regressor = RidgeRegressor(input_cols, maxIter=args.maxIter,
                 regParam=args.regParam, tol=args.tol, loss=args.loss,
-                epsion=args.epsilon)
+                epsilon=args.epsilon)
         elif args.model == "lr":
             model_name = 'Lasso Regression'
             regressor = LassoRegressor(input_cols, maxIter=args.maxIter,
                 regParam=args.regParam, tol=args.tol, loss=args.loss,
-                epsion=args.epsilon)
+                epsilon=args.epsilon)
         elif args.model == "dt":
             model_name = 'Decision Tree'
             regressor = DTRegressor(input_cols, maxDepth=args.maxDepth,
@@ -113,7 +116,6 @@ def run(args=None):
                 maxIter=args.maxIter, maxBins=args.maxBins)
 
         train_df, test_df = df.randomSplit([0.9, 0.1], seed=100)
-        flow = regressor.flow()
         r2, mae, rmse = regressor.fit_transform(train_df, test_df)
 
         metrics = {'r-Squared': r2, 'Mean Absolute Error': mae,

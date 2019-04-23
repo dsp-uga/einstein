@@ -1,3 +1,6 @@
+import findspark
+findspark.init()
+
 import os
 import copy
 import logging
@@ -33,7 +36,7 @@ class Loader:
     non-target hour offset and initialize the Spark Dataframe
     '''
     def __init__(self, target_hour=1, bucket='gs://uga_dsp_sp19',
-        filename='2017_(3,3).csv'):
+        filename='2017_(3,3)_a.csv'):
         '''Initializes the :class: `Loader` and sets up the Spark Dataframe
         which can be used for model training
 
@@ -62,7 +65,7 @@ class Loader:
         spark = SparkSession.builder.master("yarn").appName(
             "Solar Irradiance Prediction").getOrCreate()
         self.df = spark.read.csv(os.path.join(self.bucket, self.filename),
-            header='true')
+            header='true', inferSchema='true')
         self.processed_df = self.process_data(self.df)
         self.input_cols = self.get_input_columns(self.processed_df)
         return self.processed_df
@@ -80,18 +83,12 @@ class Loader:
         '''
         temp = [('y' + str(hr)) for hr in range(1, 25)]
         label = 'y' + str(self.target_hour)
-        target_cols = copy.deepcopy(temp)
-        temp.remove('y' + str(self.target_hour))
+        temp.remove(label)
         non_target_cols = temp
         df_cols = df.columns
-
-        # Renaming target offset hour column names
-        for index, target_col in enumerate(target_cols[::-1]):
-            if target_col == label:
-                df = df.withColumnRenamed(df_cols[-1 - index], 'label')
-            else:
-                df = df.withColumnRenamed(df_cols[-1 - index], target_col)
-
+        # Renaming target column to 'label'
+        df = df.withColumnRenamed(label, 'label')
+        # Dropping non-target columns
         for non_target_col in non_target_cols:
             df = df.drop(non_target_col)
         return df

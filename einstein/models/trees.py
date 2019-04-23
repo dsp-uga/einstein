@@ -2,11 +2,14 @@
 A Script to implement Regression using Trees
 """
 
+import findspark
+findspark.init()
+
 
 from pyspark.ml.regression import (RandomForestRegressor,
                                    DecisionTreeRegressor,
                                    GBTRegressor)
-from base import Model
+from einstein.models.base import Model
 
 
 class DTRegressor(Model):
@@ -22,7 +25,7 @@ class DTRegressor(Model):
                 keyword arguments of user defined parameters
         """
         self.input_cols = input_cols
-        self.kwargs = kwargs
+        self.kwargs = {k: v for k,v in kwargs.items() if v is not None}
         self.metrics = ["r2", "mae", "rmse"]
 
     def get_parameters(self, **user_params):
@@ -38,6 +41,8 @@ class DTRegressor(Model):
                           "maxDepth": 4,
                           "maxBins": 32}
         parameter_dict.update(**user_params)
+        for k, v in parameter_dict.items():
+            print(f'{k} : {v}')
         return parameter_dict
 
     def model_define(self):
@@ -64,7 +69,7 @@ class RFRegressor(Model):
                 keyword arguments of user defined parameters
         """
         self.input_cols = input_cols
-        self.kwargs = kwargs        
+        self.kwargs = {k: v for k,v in kwargs.items() if v is not None}
         self.metrics = ["r2", "mae", "rmse"]
 
     def get_parameters(self, **user_params):
@@ -81,6 +86,8 @@ class RFRegressor(Model):
                           "maxDepth": 4,
                           "maxBins": 32}
         parameter_dict.update(**user_params)
+        for k, v in parameter_dict.items():
+            print(f'{k} : {v}')
         return parameter_dict
 
     def model_define(self):
@@ -108,7 +115,7 @@ class GBTreeRegressor(Model):
                 keyword arguments of user defined parameters
         """
         self.input_cols = input_cols
-        self.kwargs = kwargs
+        self.kwargs = {k: v for k,v in kwargs.items() if v is not None}
         self.metrics = ["r2", "mae", "rmse"]
 
     def get_parameters(self, **user_params):
