@@ -21,7 +21,7 @@ class LinearRegressor(Model):
                 keyword arguments of user defined parameters
         """
         self.input_cols = input_cols
-        self.kwargs = kwargs
+        self.kwargs = {k: v for k, v in kwargs.items() if v is not None}
         self.metrics = ["r2", "mae", "rmse"]
 
     def get_parameters(self, **user_params):
@@ -37,6 +37,8 @@ class LinearRegressor(Model):
                           'elasticNetParam': 0.5, 'tol': 1e-06,
                           'loss': 'squaredError', 'epsilon': 1.35}
         parameter_dict.update(**user_params)
+        for k, v in parameter_dict.items():
+            print(f'{k} : {v}')
         return parameter_dict
 
     def model_define(self):
@@ -68,6 +70,8 @@ class RidgeRegressor(LinearRegressor):
                           'elasticNetParam': 0.0, 'tol': 1e-06,
                           'loss': 'squaredError', 'epsilon': 1.35}
         parameter_dict.update(**user_params)
+        for k, v in parameter_dict.items():
+            print(f'{k} : {v}')
         return parameter_dict
 
 
@@ -89,4 +93,6 @@ class LassoRegressor(LinearRegressor):
                           'elasticNetParam': 1.0, 'tol': 1e-06,
                           'loss': 'squaredError', 'epsilon': 1.35}
         parameter_dict.update(**user_params)
+        for k, v in parameter_dict.items():
+            print(f'{k} : {v}')
         return parameter_dict
