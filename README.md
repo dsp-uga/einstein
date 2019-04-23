@@ -3,8 +3,6 @@
 ## Synopsis
 The goal of this project is to develop a pipeline which implements a variety of machine learning algorithms for predicting solar irradiance, on [Spark](https://spark.apache.org/docs/2.2.1/api/python/pyspark.html). The software's design centers on execution in [Google Cloud Platform](https://cloud.google.com/) along with accessing pertinent data from a Google Storage Bucket.
 
-The project uses NAM-NMM data downloaded from the NCEP servers as the dataset
-
 ## Important Links
 *	[Getting Started]()
 *  [Theory]()
