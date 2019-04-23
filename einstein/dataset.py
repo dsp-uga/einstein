@@ -65,7 +65,7 @@ class Loader:
         spark = SparkSession.builder.master("yarn").appName(
             "Solar Irradiance Prediction").getOrCreate()
         self.df = spark.read.csv(os.path.join(self.bucket, self.filename),
-            header='true')
+            header='true', inferSchema='true')
         self.processed_df = self.process_data(self.df)
         self.input_cols = self.get_input_columns(self.processed_df)
         return self.processed_df
