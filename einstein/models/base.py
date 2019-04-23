@@ -3,6 +3,8 @@ A Script to implement a base abstract class which will be used
 by all regression models
 """
 
+import findspark
+findspark.init()
 
 from abc import ABC, abstractmethod
 from pyspark.ml.evaluation import RegressionEvaluator

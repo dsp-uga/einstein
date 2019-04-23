@@ -2,11 +2,14 @@
 A Script to implement Regression using Trees
 """
 
+import findspark
+findspark.init()
+
 
 from pyspark.ml.regression import (RandomForestRegressor,
                                    DecisionTreeRegressor,
                                    GBTRegressor)
-from base import Model
+from einstein.models.base import Model
 
 
 class DTRegressor(Model):

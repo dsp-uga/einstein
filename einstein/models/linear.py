@@ -1,8 +1,11 @@
 """
 A script to implement regression models
 """
+import findspark
+findspark.init()
+
 from pyspark.ml.regression import LinearRegression
-from base import Model
+from einstein.models.base import Model
 
 
 class LinearRegressor(Model):
