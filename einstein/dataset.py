@@ -1,8 +1,18 @@
+"""
+This script defines :class: `Loader` and :class: `_Fetcher`. The `Loader`
+class loads the CSV file stored in the Google Storage Bucket, and processes
+it by dropping non-target columns. The `_Fetcher` class can not be sub-classed
+by importing the module, and was used by the developers to fetch the data from
+the 'Institute of Artificial Intelligence' local servers, to fetch the dataset.
+
+Author:
+-----------
+Aashish Yadavally
+"""
 import findspark
 findspark.init()
 
 import os
-import copy
 import logging
 import datetime
 import numpy as np
@@ -19,25 +29,25 @@ GEO_SHAPES = [(1, 1), (3, 3), (5, 5)]
 
 
 def load_data(**kwargs):
-    '''Initializes a Pyspark SparkSession and loads the data into a Spark
+    """Initializes a Pyspark SparkSession and loads the data into a Spark
     Dataframe
 
         Returns:
             Spark DataFrame:
                 Dataset read into a Spark DataFrame
-    '''
+    """
     l = Loader(**kwargs)
     return l.load_data()
 
 
 class Loader:
-    '''Used to load the CSV file in the Google Storage Bucket, based on the
+    """Used to load the CSV file in the Google Storage Bucket, based on the
     grid shape, set the target hour offset for predictions, drop the
     non-target hour offset and initialize the Spark Dataframe
-    '''
+    """
     def __init__(self, target_hour=1, bucket='gs://uga_dsp_sp19',
-        filename='2017_(3,3)_a.csv'):
-        '''Initializes the :class: `Loader` and sets up the Spark Dataframe
+                 filename='2017_(3,3)_a.csv'):
+        """Initializes the :class: `Loader` and sets up the Spark Dataframe
         which can be used for model training
 
         Arguments:
@@ -49,29 +59,29 @@ class Loader:
             filename (str):
                 Filename of the CSV file in Google Storage Bucket which is to
                 be read from
-        '''
+        """
         self.bucket = bucket
         self.filename = filename
         self.target_hour = target_hour
 
     def load_data(self):
-        '''Initializes a Pyspark SparkSession and loads the data into a Spark
+        """Initializes a Pyspark SparkSession and loads the data into a Spark
         Dataframe
 
         Returns:
             df (Spark DataFrame):
                 Dataset read into a Spark Dataframe
-        '''
+        """
         spark = SparkSession.builder.master("yarn").appName(
             "Solar Irradiance Prediction").getOrCreate()
         self.df = spark.read.csv(os.path.join(self.bucket, self.filename),
-            header='true', inferSchema='true')
+                                 header='true', inferSchema='true')
         self.processed_df = self.process_data(self.df)
         self.input_cols = self.get_input_columns(self.processed_df)
         return self.processed_df
 
     def process_data(self, df):
-        '''Processes the input dataframe and sets it up for regression problem
+        """Processes the input dataframe and sets it up for regression problem
 
         Arguments:
             df (Spark DataFrame):
@@ -80,7 +90,7 @@ class Loader:
             df (Spark DataFrame):
                 Spark dataframe after removing columns containing non-target
                 offset hours, and renaming the target offset hour column
-        '''
+        """
         temp = [('y' + str(hr)) for hr in range(1, 25)]
         label = 'y' + str(self.target_hour)
         temp.remove(label)
@@ -94,7 +104,7 @@ class Loader:
         return df
 
     def get_input_columns(self, df):
-        '''Returns list of input columns
+        """Returns list of input columns
 
         Arguments:
             df (Spark DataFrame):
@@ -104,22 +114,22 @@ class Loader:
         Returns:
             list:
                 List of input column names
-        '''
+        """
         columns = df.columns
         columns.remove('label')
         return columns
 
 
 class _Fetcher:
-    '''Composes :mod: `apollo` :class: `SolarDataset` which unifies the
+    """Composes :mod: `apollo` :class: `SolarDataset` which unifies the
     NAM-NMM data with different target variables in GA Power datasets for
     target hours between 1 and 24
 
     # NOTE: Starting the class with "_" gives it a private behavior, wherein,
     it cannot be imported by importing the module
-    '''
+    """
     def __init__(self, first=FIRST, last=LAST):
-        '''Initializes `Fetcher` class which fetches the data from Institute
+        """Initializes `Fetcher` class which fetches the data from Institute
         of Artificial Intelligence's local store, where the dataset is cached
 
         # NOTE: Class access limited to developers
@@ -129,10 +139,9 @@ class _Fetcher:
                 First reftime to be retrieved
             last (pd.Timestamp):
                 Last reftime to be retrieved
-        '''
-        geo_shapes = GEO_SHAPES
+        """
 
-        for geo_shape in geo_shapes:
+        for geo_shape in GEO_SHAPES:
             x, y = self.tabular(first, last, geo_shape)
             x = np.asarray(x)
             y = np.asarray(y)
@@ -145,7 +154,7 @@ class _Fetcher:
             np.savetxt(name, cxy, delimiter=',')
 
     def tabular(self, first, last, geo_shape):
-        '''Returns a tabular version of the dataset, wherein, all spatial and
+        """Returns a tabular version of the dataset, wherein, all spatial and
         temporal dimensions are flattened and concatenated into a single
         vector per instance
 
@@ -156,10 +165,10 @@ class _Fetcher:
                 Last reftime to be retrieved
             geo_shape (tuple):
                 Grid size around the ATHENS location which is retained
-        '''
+        """
         from apollo.models.solar import SolarDataset
 
         sd = SolarDataset(start=first, stop=last, geo_shape=geo_shape,
-            standardize=False)
+                          standardize=False)
         x, y = sd.tabular()
         return x, y

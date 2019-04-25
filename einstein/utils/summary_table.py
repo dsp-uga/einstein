@@ -1,5 +1,15 @@
+"""
+This script prints out a summary table for the regression with details
+about the model, target hour offsets, grid shape around the ATHENS location,
+and evaluation metrics of the model such as, "r-Squared", "Mean Absolute Error"
+and "Root Mean Squared Error".
+
+Author:
+----------
+Aashish Yadavally
+"""
 def draw(year, target_hr, grid, model_name, dictionary):
-    '''Draws a summary table representing the regression statistics
+    """Draws a summary table representing the regression statistics
 
     Arguments:
         year (str):
@@ -13,7 +23,7 @@ def draw(year, target_hr, grid, model_name, dictionary):
             Model that the data has been trained on
         dictionary (dict):
             Dictionary of metric names and values
-    '''
+    """
     print("-" * 75)
     print(f'{" " * 25} Statistics Summary Table')
     print("-" * 75)
