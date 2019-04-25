@@ -1,11 +1,13 @@
 """A setuptools based setup module.
 
-References:
-(a) https://github.com/pypa/sampleproject
-"""
+References: https://github.com/pypa/sampleproject
 
-from setuptools import setup, find_packages
+Author:
+----------
+Aashish Yadavally
+"""
 import os
+from setuptools import setup, find_packages
 
 
 repo_dir = os.path.abspath(__file__)
@@ -19,7 +21,7 @@ setup(
 	# It will live on PyPi at:
 	#		https://pypi.org/project/einstein/
 	name='einstein',
-	# Versions should coply with PEP 440 : 
+	# Versions should comply with PEP 440 : 
 	# 		https://www.python.org/dev/peps/pep-0440/
 	version='0.0.1-dev',
 	# Packages can be manually mentioned, or `setuptools.find_packages`
@@ -30,7 +32,7 @@ setup(
 	# Corresponds to the Home Page of the metadata field
 	url='https://github.com/dsp-uga/einstein',
 	# Name and email addresses of project owners.
-	author='Aashish Yadavally, Anirudh Maurya, Jayant Parashar',
+	author='Aashish Yadavally, Anirudh K.M. Kakarlapudi, Jayant Parashar',
 	author_email='aashish.yadavally1995@gmail.com',
 	classifiers=[
 		'Intended Audience :: Science/Research',
