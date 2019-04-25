@@ -1,5 +1,11 @@
 """
-A script to implement regression models
+This script implements the :class: `LinearRegressor`,  :class: `RidgeRegressor`
+and :class: `LassoRegressor`, each sub-classed on :class: `Model`, which implement
+the linear regression models.
+
+Author:
+----------
+Jayant Parashar
 """
 import findspark
 findspark.init()
@@ -48,8 +54,8 @@ class LinearRegressor(Model):
             A linear regression model
         """
         params = self.get_parameters(**self.kwargs)
-        lr = LinearRegression(**params)
-        return lr
+        linear_reg = LinearRegression(**params)
+        return linear_reg
 
 
 class RidgeRegressor(LinearRegressor):
