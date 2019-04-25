@@ -3,15 +3,13 @@ This script was written by Dr. Shannon Quinn for distributing to he students par
 CSCI 8360 : Data Science Practicum course, to let us create clusters with an 
 initialization action.
 
-A few additional packages were added to the PIP_PACKAGES attribute, to enable `pip` 
-to download these packages as a part of the setup.
+A few additional packages were added at the end to download using `pip`as a part of the setup.
 
 For the purpose of testing, this file was put in a Google Storage Bucket, the access
 of which is limited to the developers. For reproducing with the `einstein` package,
 you are advised to upload this file to a Google Storage Bucket and use that link as
 an argument to the module. 
 """
-
 
 #!/bin/bash
 set -e
@@ -26,16 +24,13 @@ set -e
 
 URL_PREFIX=https://repo.continuum.io/archive/
 ANACONDA_VARIANT=3
-ANACONDA_VERSION=2018.12
+ANACONDA_VERSION=2019.03
 OS_ARCH=Linux-x86_64
 ANACONDA_FULL_NAME="Anaconda${ANACONDA_VARIANT}-${ANACONDA_VERSION}-${OS_ARCH}.sh"
 
 CONDA_INSTALL_PATH="/opt/conda"
 PROJ_DIR=${PWD}
 LOCAL_CONDA_PATH=${PROJ_DIR}/anaconda
-
-CONDA_PACKAGES="plotly protobuf gcsfs"
-PIP_PACKAGES="gcsfs pvlib siphon tables findspark pytest"
 
 if [[ -f "/etc/profile.d/conda.sh" ]]; then
     echo "file /etc/profile.d/conda.sh exists! Dataproc has installed conda previously. Skipping install!"
@@ -131,14 +126,8 @@ echo "Finished bootstrapping via Anaconda, sourcing /etc/profile ..."
 source /etc/profile
 
 # Update everything.
-conda update -y --all
+conda update -y --al
 
-# 3. Install conda and pip packages (if specified)
-if [[ -v CONDA_PACKAGES ]]; then
-    echo "conda packages requested: $CONDA_PACKAGES"
-    conda install $CONDA_PACKAGES
-fi
-if [[ -v PIP_PACKAGES ]]; then
-    echo "pip packages requested: $PIP_PACKAGES"
-    pip install $PIP_PACKAGES
-fi
+# instaling required packages
+echo "installing pip packages"
+pip install pvlib siphon tables findspark pytest
