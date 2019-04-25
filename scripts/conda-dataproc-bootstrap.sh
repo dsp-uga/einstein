@@ -126,7 +126,7 @@ echo "Finished bootstrapping via Anaconda, sourcing /etc/profile ..."
 source /etc/profile
 
 # Update everything.
-conda update -y --al
+conda update -y --all
 
 # instaling required packages
 echo "installing pip packages"
