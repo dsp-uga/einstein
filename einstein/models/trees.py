@@ -1,10 +1,14 @@
 """
-A Script to implement Regression using Trees
-"""
+This script implements the :class: `DTRegressor`,  :class: `RFRegressor`
+and :class: `GBTRegressor`, each sub-classed on :class: `Model`, which
+implement the tree regression models.
 
+Author:
+----------
+Anirudh Kumar Maurya Kakarlapudi
+"""
 import findspark
 findspark.init()
-
 
 from pyspark.ml.regression import (RandomForestRegressor,
                                    DecisionTreeRegressor,
@@ -25,7 +29,7 @@ class DTRegressor(Model):
                 keyword arguments of user defined parameters
         """
         self.input_cols = input_cols
-        self.kwargs = {k: v for k,v in kwargs.items() if v is not None}
+        self.kwargs = {k: v for k, v in kwargs.items() if v is not None}
         self.metrics = ["r2", "mae", "rmse"]
 
     def get_parameters(self, **user_params):
@@ -69,7 +73,7 @@ class RFRegressor(Model):
                 keyword arguments of user defined parameters
         """
         self.input_cols = input_cols
-        self.kwargs = {k: v for k,v in kwargs.items() if v is not None}
+        self.kwargs = {k: v for k, v in kwargs.items() if v is not None}
         self.metrics = ["r2", "mae", "rmse"]
 
     def get_parameters(self, **user_params):
@@ -115,7 +119,7 @@ class GBTreeRegressor(Model):
                 keyword arguments of user defined parameters
         """
         self.input_cols = input_cols
-        self.kwargs = {k: v for k,v in kwargs.items() if v is not None}
+        self.kwargs = {k: v for k, v in kwargs.items() if v is not None}
         self.metrics = ["r2", "mae", "rmse"]
 
     def get_parameters(self, **user_params):
@@ -132,6 +136,8 @@ class GBTreeRegressor(Model):
                           "maxIter": 10,
                           "maxBins": 32}
         parameter_dict.update(**user_params)
+        for k, v in parameter_dict.items():
+            print(f'{k} : {v}')
         return parameter_dict
 
     def model_define(self):

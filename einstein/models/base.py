@@ -1,6 +1,12 @@
 """
-A Script to implement a base abstract class which will be used
-by all regression models
+This script defines an abstract base :class: `Model`,
+with abstract methods :func: `get_parameters` and :func:
+`model_define`, which is sub-classed by the Linear and Tree
+Regression models defined in :mod: `einstein`.
+
+Author:
+----------
+Anirudh Kumar Maurya Kakarlapudi
 """
 
 import findspark
