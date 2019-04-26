@@ -100,7 +100,7 @@ def run(args=None):
 
     if args.test:
         print('Running test suite...')
-        subprocess.call("python -m pytest --disable-warnings", shell=True)
+        subprocess.call("python -m pytest", shell=True)
     else:
         if args.model == "mlr":
             model_name = 'Linear Regression'
