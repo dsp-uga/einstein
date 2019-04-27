@@ -40,9 +40,6 @@ To copy the `einstein` project to the VM instance, there are two alternatives:
 * [PySpark](https://spark.apache.org/docs/2.3.1/api/python/index.html) - Python API for [Apache Spark](https://spark.apache.org/)
 * [Spark MLLib](https://spark.apache.org/mllib/) 
 
-### Versioning
-This project uses an adapted version of the [GitFlow ](https://www.atlassian.com/git/tutorials/comparing-workflows/gitflow-workflow) workflow to organize branches and "releases".
-
 ## Contributing Guidelines
 There are no specific guidelines for contributing, apart from a few general guidelines we tried to follow, such as:
 * Code should follow PEP8 standards as closely as possible
