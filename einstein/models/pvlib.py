@@ -34,8 +34,8 @@ class PVLibModel(Model):
             stop (pd.Timestamp):
                 The stop time
         """
-        self.lat = lat
-        self.lon = lon
+        self.lat = lat or ATHENS_LAT
+        self.lon = lon or ATHENS_LON
         # If no `start` reftime is given, it is defaulted to current timestamp
         if start is None:
             self.start = pd.Timestamp.now()
@@ -51,7 +51,7 @@ class PVLibModel(Model):
             # the `start` reftime
             self.start = start
             self.stop = self.start + pd.Timedelta(1, 'D')
-        self.model_name = model_name
+        self.model_name = model_name or 'NAM'
         self.forecast_model = self.model_define()
 
     def model_define(self):
