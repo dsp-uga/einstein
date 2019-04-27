@@ -80,9 +80,8 @@ class PVLibModel(Model):
         return
 
     def get_processed_data(self):
-        """Retrieves the data from the forecast model and returns the features:
-        `temp_air`, `ghi_raw`, `wind_speed_gust_surface`, `total_clouds`,
-        `mid_clouds`, `high_clouds`
+        """Retrieves the data from the forecast model and returns features for
+        each model
 
         Returns:
             data_frame (pd.DataFrame):
