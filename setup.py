@@ -27,6 +27,7 @@ setup(
 	# Packages can be manually mentioned, or `setuptools.find_packages`
 	# can be used for this purpose.
 	packages=find_packages(exclude=["*test_*.*", "*_test.*", "tests"]),
+	entry_points={'console_scripts': ['einstein = einstein.__main__:run']},
 	description='Solar Irradiance Prediction using PySpark',
 	long_description=long_description,
 	# Corresponds to the Home Page of the metadata field
