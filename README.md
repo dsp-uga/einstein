@@ -5,7 +5,7 @@ The goal of this project is to develop a pipeline which implements a variety of 
 
 ## Important Links
 *	[Getting Started]()
-*  [Theory]()
+*       [Theory]()
 *	[Contribution Guidelines](https://github.com/dsp-uga/einstein#contributing)
 *	[Contributors](https://github.com/dsp-uga/einstein#contributors)
 
@@ -31,9 +31,9 @@ To copy the `einstein` project to the VM instance, there are two alternatives:
 ### Usage
  To run the experiments and analyze solar irradiance predictions, the user can run the following command: 
  
-`> python -m einstein --options`
+`> einstein --options`
  
- The user can get a description of the options by using the command: `> python -m einstein --help`.
+ The user can get a description of the options by using the command: `> einstein --help`.
 
 ### Built With
 * [Python](https://www.python.org/)
