@@ -5,7 +5,7 @@ The goal of this project is to develop a pipeline which implements a variety of 
 
 ## Important Links
 *	[Getting Started]()
-*       [Theory]()
+* [Theory]()
 *	[Contribution Guidelines](https://github.com/dsp-uga/einstein#contributing)
 *	[Contributors](https://github.com/dsp-uga/einstein#contributors)
 
