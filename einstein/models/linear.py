@@ -12,6 +12,8 @@ findspark.init()
 
 from pyspark.ml.regression import LinearRegression
 from einstein.models.base import Model
+from pyspark.ml.tuning import CrossValidator, ParamGridBuilder
+
 
 
 class LinearRegressor(Model):
@@ -56,6 +58,39 @@ class LinearRegressor(Model):
         params = self.get_parameters(**self.kwargs)
         linear_reg = LinearRegression(**params)
         return linear_reg
+
+    def fit_transform(self, train_data, test_data):
+        """A method to train the model and do predictions.
+        a function for calculating the metric value is called
+
+        Args:
+            train_data: the data on which the model should be trained
+            test_data: the data on which the predictions are to be made
+        Returns:
+            A list containing metric values ["r2", "mae", "rmse"]
+        """
+        pipeline = self.flow()
+        evaluator = RegressionEvaluator(labelCol='label',
+                                        predictionCol='prediction',
+                                        metricName="rmse")
+        paramGrid = ParamGridBuilder() \
+            .addGrid(lr.regParam, [0.5]) \
+            .build()
+        crossval = CrossValidator(estimator=pipeline,
+                                  estimatorParamMaps=paramGrid,
+                                  evaluator=evaluator,
+                                  numFolds=4)
+        cvmodel = crossval.fit(training)
+        predictions = cvmodel.transform(test_data)
+        predictions = predictions['prediction', 'label']
+        cv_metric_rmse = evaluator.evaluate(predictions)
+
+        model = pipeline.fit(train_data)
+        predictions = model.transform(test_data)
+        predictions = predictions['prediction', 'label']
+        metric_list=self.get_accuracy(predictions)
+        metric_list.append(cv_metric_rmse)
+        return metric_list
 
 
 class RidgeRegressor(LinearRegressor):
