@@ -115,7 +115,7 @@ def run(args=None):
                                  stop=args.stop)
         pvlib_model.plot()
     else:
-        filename = f'{args.year}_({args.grid},{args.grid})_a.csv'
+        filename = f'{args.year}_{args.grid}.csv'
 
         loader = Loader(target_hour=args.target_hr, bucket=args.bucket,
                         filename=filename)
