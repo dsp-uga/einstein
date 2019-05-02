@@ -39,7 +39,8 @@ def get_parser():
                                  'ir'], help='PVLib Forecast Model, or Models\
                                  for prediction: Linear Regression, Ridge\
                                  Regression, Lasso Regression, Decision Trees,\
-                                 Random Forests, Gradient Boost Trees')
+                                 Random Forests, Gradient Boost Trees,\
+                                 Isotonic Regression')
     parser.add_argument('--grid', dest='grid', default='3', type=str,
                         choices=['1', '3', '5'], help='1 -> (1, 1) ;\
                         3 -> (3, 3); 5 -> (5, 5)\nGrid Size - Grid sizes\
@@ -119,7 +120,7 @@ def run(args=None):
                                  stop=args.stop)
         pvlib_model.plot()
     else:
-        filename = f'{args.year}_({args.grid},{args.grid})_a.csv'
+        filename = f'{args.year}_{args.grid}.csv'
 
         loader = Loader(target_hour=args.target_hr, bucket=args.bucket,
                         filename=filename)
