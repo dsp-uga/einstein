@@ -117,6 +117,6 @@ class Model(ABC):
             metric_values (list):
                 List containing metric values ["r2", "mae", "rmse"]
         """
-        metric_values = [self.get_evaluator(metric).evaluate(predictions) \
-        for metric in self.metrics]
+        metric_values = [self.get_evaluator(metric).evaluate(predictions)
+                         for metric in self.metrics]
         return metric_values

@@ -2,7 +2,6 @@
 This script implements the :class: `DTRegressor`,  :class: `RFRegressor`
 and :class: `GBTRegressor`, each sub-classed on :class: `Model`, which
 implement the tree regression models.
-
 Author:
 ----------
 Anirudh Kumar Maurya Kakarlapudi
@@ -22,7 +21,6 @@ class DTRegressor(Model):
     """
     def __init__(self, input_cols, **kwargs):
         """Initialises the DTRegressor class.
-
         Args:
             input_cols (list):
                 List of all the input column names
@@ -35,7 +33,6 @@ class DTRegressor(Model):
 
     def get_parameters(self, user_params):
         """Declares a dictionary of hyperparameters for Regression.
-
         Args:
             user_params (dict):
                 Dictionary of keyword arguments for user defined parameters
@@ -54,7 +51,6 @@ class DTRegressor(Model):
     def model_define(self):
         """Returns a model with the hyperparameters inputted in :func:
         `get_parameters`
-
         Returns:
             (pyspark.ml.regression.DecisionTreeRegressor):
                 Decision Tree Regression model
@@ -64,7 +60,7 @@ class DTRegressor(Model):
     def get_param_grid(self, model):
         """Defines a parameter grid for crossvalidation with the user-defined
         model parameters
-    
+
         Args:
             model (pyspark.ml.regression):
                 Regression model for which ParamGrid is to be built
@@ -85,7 +81,6 @@ class RFRegressor(Model):
     """
     def __init__(self, input_cols, **kwargs):
         """Initialises the RFRegressor class.
-
         Args:
             input_cols (list):
                 List of all the input column names
@@ -98,7 +93,6 @@ class RFRegressor(Model):
 
     def get_parameters(self, user_params):
         """Declares a dictionary of hyperparameters for Regression.
-
         Args:
             user_params (dict):
                 Dictionary of keyword arguments for user defined parameters
@@ -118,7 +112,6 @@ class RFRegressor(Model):
     def model_define(self):
         """Returns a model with the hyperparameters inputted in :func:
         `get_parameters`.
-
         Returns:
             (pyspark.ml.regression.RandomForestRegressor)
                 Random Forest Regression model
@@ -128,7 +121,7 @@ class RFRegressor(Model):
     def get_param_grid(self, model):
         """Defines a parameter grid for crossvalidation with the user-defined
         model parameters
-    
+
         Args:
             model (pyspark.ml.regression):
                 Regression model for which ParamGrid is to be built
@@ -151,7 +144,6 @@ class GBTreeRegressor(Model):
     """
     def __init__(self, input_cols, **kwargs):
         """Initialises the GBTRegressor class.
-
         Args:
             input_cols (list):
                 List of all the input column names
@@ -164,7 +156,6 @@ class GBTreeRegressor(Model):
 
     def get_parameters(self, user_params):
         """Declares a dictionary of hyperparameters for Regression.
-
         Args:
             user_params (dict):
                 Dictionary of keyword arguments for user defined parameters
@@ -184,7 +175,6 @@ class GBTreeRegressor(Model):
     def model_define(self):
         """Returns a model with the hyperparameters inputted in :func:
         `get_parameters`
-
         Returns:
             (pyspark.ml.regression.GBTRegressor)
                 Gradient Boosting Tree Regression model
@@ -194,7 +184,7 @@ class GBTreeRegressor(Model):
     def get_param_grid(self, model):
         """Defines a parameter grid for crossvalidation with the user-defined
         model parameters
-    
+
         Args:
             model (pyspark.ml.regression):
                 Regression model for which ParamGrid is to be built
