@@ -18,7 +18,6 @@ import findspark
 findspark.init()
 
 from einstein.dataset import Loader
-from einstein.models.pvlib import PVLibModel
 from einstein.models.isotonic import IsotonicRegressor
 from einstein.models.linear import (LinearRegressor, RidgeRegressor,
                                     LassoRegressor)
@@ -115,6 +114,8 @@ def run(args=None):
         print('Running Test Suite...')
         subprocess.call("python -m pytest", shell=True)
     elif args.model == "pvlib":
+        from einstein.models.pvlib import PVLibModel
+
         pvlib_model = PVLibModel(model_name=args.forecast_model, lat=args.lat,
                                  lon=args.lon, start=args.start,
                                  stop=args.stop)
