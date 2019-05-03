@@ -1,15 +1,13 @@
-"""
-This script was written by Dr. Shannon Quinn for distributing to he students part of 
-CSCI 8360 : Data Science Practicum course, to let us create clusters with an 
-initialization action.
-
-A few additional packages were added at the end to download using `pip`as a part of the setup.
-
-For the purpose of testing, this file was put in a Google Storage Bucket, the access
-of which is limited to the developers. For reproducing with the `einstein` package,
-you are advised to upload this file to a Google Storage Bucket and use that link as
-an argument to the module. 
-"""
+#This script was written by Dr. Shannon Quinn for distributing to the students, part of 
+#CSCI 8360 : Data Science Practicum course, to let us create clusters with an 
+#initialization action.
+#
+#A few additional packages were added at the end to download using `pip`as a part of the setup.
+#
+#For the purpose of testing, this file was put in a Google Storage Bucket, the access
+#of which is limited to the developers. For reproducing with the `einstein` package,
+#you are advised to upload this file to a Google Storage Bucket and use that link as
+#an argument to the module. 
 
 #!/bin/bash
 set -e
@@ -19,7 +17,6 @@ set -e
 # Run on BOTH 'Master' and 'Worker' nodes
 #ROLE=$(/usr/share/google/get_metadata_value attributes/dataproc-role)
 #if [[ "${ROLE}" == 'Master' ]]; then
-
 # Some variables to cut down on space. Modify these if you want.
 
 URL_PREFIX=https://repo.continuum.io/archive/
@@ -130,4 +127,4 @@ conda update -y --all
 
 # instaling required packages
 echo "installing pip packages"
-pip install pvlib siphon tables findspark pytest
+pip install pvlib siphon tables findspark pytest netCDF4 pyAesCrypt

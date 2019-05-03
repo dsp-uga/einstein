@@ -3,18 +3,22 @@ This script is the `main` script, which is the entry point to the :mod:
 `einstein`. The user can input a variety of arguments to run the models
 for analyzing and experimenting with solar data. Evaluation metrics such
 as 'r-Squared', 'Mean Absolute Error' and 'Root Mean Squared Error' are
-returned for analysis, on running the regression models.
+returned for analysis, on running the regression models, and plots of
+'GHI', 'DHI' and 'DNI' versus the timestamps are returned for analysis,
+on running the `PVLibModel`.
 
 Author:
 -----------
 Aashish Yadavally
 """
+import argparse
+import subprocess
+import pandas as pd
 import findspark
 findspark.init()
 
-import argparse
-import subprocess
 from einstein.dataset import Loader
+from einstein.models.isotonic import IsotonicRegressor
 from einstein.models.linear import (LinearRegressor, RidgeRegressor,
                                     LassoRegressor)
 from einstein.models.trees import DTRegressor, RFRegressor, GBTreeRegressor
@@ -30,10 +34,12 @@ def get_parser():
     """
     parser = argparse.ArgumentParser(description='Solar Irradiance Prediction')
     parser.add_argument('--model', dest='model', default='mlr', type=str,
-                        choices=['mlr', 'rr', 'lr', 'dt', 'rf', 'gbt'],
-                        help='Models for prediction: Linear\
-                        Regression, Ridge Regression, Lasso Regression,\
-                        Decision Trees, Random Forests, Gradient Boost Trees')
+                        choices=['mlr', 'rr', 'lr', 'dt', 'rf', 'gbt', 'pvlib',
+                                 'ir'], help='PVLib Forecast Model, or Models\
+                                 for prediction: Linear Regression, Ridge\
+                                 Regression, Lasso Regression, Decision Trees,\
+                                 Random Forests, Gradient Boost Trees,\
+                                 Isotonic Regression')
     parser.add_argument('--grid', dest='grid', default='3', type=str,
                         choices=['1', '3', '5'], help='1 -> (1, 1) ;\
                         3 -> (3, 3); 5 -> (5, 5)\nGrid Size - Grid sizes\
@@ -76,6 +82,18 @@ def get_parser():
                         shape parameter to control the amount of robustness\
                         (must be > 1.0) - parameter for Linear Regression,\
                         Ridge Regression, Lasso Regression')
+    parser.add_argument('--isotonic', dest='isotonic', default='True',
+    	                type=bool, choices=[True, False],
+    					help='Isotonicity of model')
+    parser.add_argument('--fm', dest='forecast_model', type=str, help='PVLib\
+                        Forecast Model', default='NAM',
+                        choices=['NAM', 'RAP', 'GFS', 'NDFD', 'HRRR'])
+    parser.add_argument('--start', dest='start', type=pd.Timestamp,
+                        help='Start of PVLib Forecast')
+    parser.add_argument('--stop', dest='stop', type=pd.Timestamp, help='End\
+                        of PVLib Forecast')
+    parser.add_argument('--lat', dest='lat', type=float, help='Latitude')
+    parser.add_argument('--lon', dest='lon', type=float, help='Longitude')
     parser.add_argument('--test', dest='test', type=bool, default=False,
                         choices=[True, False], help='To run the test suite')
     return parser
@@ -91,17 +109,24 @@ def run(args=None):
     '''
     parser = get_parser()
     args = parser.parse_args()
-    filename = f'{args.year}_({args.grid},{args.grid})_a.csv'
-
-    loader = Loader(target_hour=args.target_hr, bucket=args.bucket,
-                    filename=filename)
-    df = loader.load_data().repartition(48)
-    input_cols = loader.input_cols
 
     if args.test:
-        print('Running test suite...')
+        print('Running Test Suite...')
         subprocess.call("python -m pytest", shell=True)
+    elif args.model == "pvlib":
+        from einstein.models.pvlib import PVLibModel
+
+        pvlib_model = PVLibModel(model_name=args.forecast_model, lat=args.lat,
+                                 lon=args.lon, start=args.start,
+                                 stop=args.stop)
+        pvlib_model.plot()
     else:
+        filename = f'{args.year}_{args.grid}.csv'
+
+        loader = Loader(target_hour=args.target_hr, bucket=args.bucket,
+                        filename=filename)
+        df = loader.load_data().repartition(48)
+        input_cols = loader.input_cols
         if args.model == "mlr":
             model_name = 'Linear Regression'
             regressor = LinearRegressor(input_cols, maxIter=args.maxIter,
@@ -131,7 +156,9 @@ def run(args=None):
             regressor = GBTreeRegressor(input_cols, maxDepth=args.maxDepth,
                                         maxIter=args.maxIter,
                                         maxBins=args.maxBins)
-
+        elif args.model == 'ir':
+            model_name = 'Isotonic Regression'
+            regressor = IsotonicRegressor(input_cols, isotonic=args.isotonic)
         train_df, test_df = df.randomSplit([0.9, 0.1], seed=100)
         # Repartitioning the data
         train_df.repartition(48)
