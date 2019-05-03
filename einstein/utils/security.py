@@ -16,9 +16,9 @@ import pyAesCrypt
 class Encryption:
     """A class for encrypting the data files
     """
-    def __init__(self, key_path='gs://dsp_uga/',
-                 file_path='gs://uga_dsp_sp19/',
-                 encrypt_path='gs://profinal/'):
+    def __init__(self, file_path='gs://uga_dsp_sp19/',
+                 encrypt_path='gs://profinal/',
+                 key_path='gs://dsp_uga'):
         """Initialises the class.
 
         Args:
@@ -75,7 +75,8 @@ class Encryption:
                  A google storage path where the enrypted files should be
                  stored
         """
-        subprocess.run(f'gsutil rsync -r {gspath} ~/einstein/temp/', shell=True)
+        subprocess.run(f'gsutil rsync -r {gspath} ~/einstein/temp/',
+                       shell=True)
 
     def upload(self, file_name, gspath):
         """Function to upload the file into the storage bucket
@@ -83,27 +84,26 @@ class Encryption:
             file_name(str):
                 The name of file to be uploaded
         """
-        subprocess.run(f'gsutil -m cp ~/einstein/temp/{file_name} {gspath}', shell=True)
+        subprocess.run(f'gsutil -m cp ~/einstein/temp/{file_name} {gspath}',
+                       shell=True)
 
 
 class Decryption:
     """A class for decryting the data files
     """
-    def __init__(self, key_path,
-                 encrypt_path,
-                 decrypt_path):
+    def __init__(self, encrypt_path='gs://profinal/',
+                 decrypt_path='gs://dsp_uga/'):
         """Initialises the class.
 
         Args:
-            key_path(str):
-                A google storage path where the key should be stored
-            decrypt_path(str):
-                A google storage path where the decrypt files should be stored
             encrypt_path(str):
                 A google storage path where the enrypted files are stored
+            decrypt_path(str):
+                A google storage path where the key is stored and
+                decrypt files should be stored
         """
         self.buffer_size = 64 * 1024
-        self.key_path = key_path
+        self.key_path = decrypt_path
         self.encrypt_path = encrypt_path
         self.decrypt_path = decrypt_path
 
@@ -132,7 +132,8 @@ class Decryption:
         os.mkdir('temp')
         self.download(file_name + ".aes", self.encrypt_path)
         self.load_key('key.txt')
-        pyAesCrypt.decryptFile('temp/' + file_name + ".aes", 'temp/' + file_name,
+        pyAesCrypt.decryptFile('temp/' + file_name + ".aes",
+                               'temp/' + file_name,
                                self.key, self.buffer_size)
         self.upload(file_name, self.decrypt_path)
         shutil.rmtree('temp')
@@ -160,7 +161,8 @@ class Decryption:
                 The google storage bucket path from where the file should be
                 downloaded
         """
-        subprocess.run(f'gsutil -m cp {gspath}{file_name} ~/einstein/temp/', shell=True)
+        subprocess.run(f'gsutil -m cp {gspath}{file_name} ~/einstein/temp/',
+                       shell=True)
 
     def upload(self, file_name, gspath):
         """Uploads the file in the storage bucket
@@ -172,4 +174,5 @@ class Decryption:
                 The google storage bucket path from where the encrypt file
                 should be uploaded
         """
-        subprocess.run(f'gsutil -m cp ~/einstein/temp/{file_name} {gspath}', shell=True)
+        subprocess.run(f'gsutil -m cp ~/einstein/temp/{file_name} {gspath}',
+                       shell=True)
