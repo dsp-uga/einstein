@@ -34,7 +34,8 @@ def test_process_data():
     # Testing if 'label' column is present in the processed DataFrame
     assert 'label' in cols
 
-    y_cols = [('y' + str(offset)) for offset in range(1, 25) if offset != L.target_hour]
+    y_cols = [('y' + str(offset)) for offset in range(1, 25)
+              if offset != L.target_hour]
     # Testing if other target hour offset columns are present in the processed
     # Spark DataFrame
     for y_col in y_cols:
