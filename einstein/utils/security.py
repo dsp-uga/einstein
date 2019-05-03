@@ -75,7 +75,7 @@ class Encryption:
                  A google storage path where the enrypted files should be
                  stored
         """
-        subprocess.run(f'gsutil rsync -r {gspath} ~/temp/', shell=True)
+        subprocess.run(f'gsutil rsync -r {gspath} ~/einstein/temp/', shell=True)
 
     def upload(self, file_name, gspath):
         """Function to upload the file into the storage bucket
@@ -83,7 +83,7 @@ class Encryption:
             file_name(str):
                 The name of file to be uploaded
         """
-        subprocess.run(f'gsutil -m cp ~/temp/{file_name} {gspath}', shell=True)
+        subprocess.run(f'gsutil -m cp ~/einstein/temp/{file_name} {gspath}', shell=True)
 
 
 class Decryption:
@@ -117,7 +117,7 @@ class Decryption:
         Returns:
             The 16 digit key
         """
-        self.download('key.txt', self.key_path)
+        self.download(key_file_name, self.key_path)
         with open('temp/'+key_file_name, 'r') as file:
             self.key = file.read()
 
@@ -160,8 +160,7 @@ class Decryption:
                 The google storage bucket path from where the file should be
                 downloaded
         """
-        print(f'gsutil -m cp {gspath}{file_name} ~/temp')
-        subprocess.run(f'gsutil -m cp {gspath}{file_name} ~/temp/', shell=True)
+        subprocess.run(f'gsutil -m cp {gspath}{file_name} ~/einstein/temp/', shell=True)
 
     def upload(self, file_name, gspath):
         """Uploads the file in the storage bucket
@@ -173,4 +172,4 @@ class Decryption:
                 The google storage bucket path from where the encrypt file
                 should be uploaded
         """
-        subprocess.run(f'gsutil -m cp ~/temp/{file_name} {gspath}', shell=True)
+        subprocess.run(f'gsutil -m cp ~/einstein/temp/{file_name} {gspath}', shell=True)
