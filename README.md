@@ -5,7 +5,7 @@ The goal of this project is to develop a pipeline which implements a variety of 
 
 ## Important Links
 *	[Getting Started]()
-*  [Theory]()
+* [Theory]()
 *	[Contribution Guidelines](https://github.com/dsp-uga/einstein#contributing)
 *	[Contributors](https://github.com/dsp-uga/einstein#contributors)
 
@@ -18,7 +18,7 @@ This section describes the preqrequisites, and contains instructions, to get the
 
 **NOTE**: The `conda-dataproc-bootstrap.sh` script in the "scripts" directory needs to be used as an "Initialization Action" while creating the cluster.
 
-The Initialization Action will set up a `conda` environment in all the VM instances, in which, Spark, latest version of Python, and the following libraries will be installed: `findspark`, `pytest`, `pvlib`, `siphon`.
+The Initialization Action will set up a `conda` environment in all the VM instances, in which, Spark, latest version of Python, and the following libraries will be installed: `findspark`, `pytest`, `pvlib`, `siphon`,`tables`, `netCDF4`, `pyAesCrypt`.
 
 To copy the `einstein` project to the VM instance, there are two alternatives:
 * [Google Cloud SDK](https://cloud.google.com/sdk/install): When installed in the local machine, the user can copy the contents of this repository to the DataProc VM instance using the command:
@@ -31,9 +31,9 @@ To copy the `einstein` project to the VM instance, there are two alternatives:
 ### Usage
  To run the experiments and analyze solar irradiance predictions, the user can run the following command: 
  
-`> python -m einstein --options`
+`> einstein --options`
  
- The user can get a description of the options by using the command: `> python -m einstein --help`.
+ The user can get a description of the options by using the command: `> einstein --help`.
 
 ### Built With
 * [Python](https://www.python.org/)
