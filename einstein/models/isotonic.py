@@ -13,6 +13,7 @@ from pyspark.ml.regression import IsotonicRegression
 from einstein.models.base import Model
 from pyspark.ml.tuning import ParamGridBuilder
 
+
 class IsotonicRegressor(Model):
     """Subclasses base :class: `Model` to initialize an Isotonic Regression
     """
@@ -28,6 +29,7 @@ class IsotonicRegressor(Model):
         self.input_cols = input_cols
         self.kwargs = {k: v for k, v in kwargs.items() if v is not None}
         self.metrics = ["r2", "mae", "rmse"]
+
 
     def get_parameters(self, user_params):
         """Declares a dictionary of hyperparameters for Regression.
