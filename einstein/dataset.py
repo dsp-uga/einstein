@@ -9,15 +9,12 @@ Author:
 -----------
 Aashish Yadavally
 """
-import findspark
-findspark.init()
-
 import os
 import logging
 import datetime
 import numpy as np
 import pandas as pd
-from pyspark.sql import SparkSession
+from einstein.reader import read_csv
 
 
 # First reftime to be retrieved while fetching the data
@@ -72,9 +69,7 @@ class Loader:
             df (Spark DataFrame):
                 Dataset read into a Spark Dataframe
         """
-        spark = SparkSession.builder.master("yarn").appName(
-            "Solar Irradiance Prediction").getOrCreate()
-        self.df = spark.read.csv(os.path.join(self.bucket, self.filename),
+        self.df = read_csv(os.path.join(self.bucket, self.filename),
                                  header='true', inferSchema='true')
         self.processed_df = self.process_data(self.df)
         self.input_cols = self.get_input_columns(self.processed_df)
