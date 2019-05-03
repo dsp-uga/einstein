@@ -46,7 +46,7 @@ class Loader:
     non-target hour offset and initialize the Spark Dataframe
     """
     def __init__(self, target_hour=1, bucket='gs://uga_dsp_sp19',
-                 filename='2017_(3,3)_a.csv'):
+                 filename='2017_3.csv'):
         """Initializes the :class: `Loader` and sets up the Spark Dataframe
         which can be used for model training
 

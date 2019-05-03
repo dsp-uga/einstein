@@ -127,4 +127,4 @@ conda update -y --all
 
 # instaling required packages
 echo "installing pip packages"
-pip install pvlib siphon tables findspark pytest netCDF4
+pip install pvlib siphon tables findspark pytest netCDF4 pyAesCrypt
