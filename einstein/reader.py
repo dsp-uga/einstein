@@ -8,7 +8,7 @@ Anirudh K.M. Kakarlapudi
 """
 import os
 import findspark
-from security import Decryption
+from einstein.utils.security import Decryption
 findspark.init()
 from pyspark.sql import SparkSession
 
@@ -34,7 +34,6 @@ def read_csv(file_name, key_path='gs://dsp_uga/',
         "Solar Irradiance Prediction").getOrCreate()
     dec = Decryption(key_path, encrypt_path, decrypt_path)
     dec.decrypt(file_name)
-    data_frame = spark.read.csv(os.path.join(decrypt_path, file_name),
-                                header='true', inferSchema='true')
-    dec.delete_data(file_name, decrypt_path)
+    data_frame = spark.read.csv(os.path.join(decrypt_path, file_name), header='true', inferSchema='true')
+    #dec.delete_data(file_name, decrypt_path)
     return data_frame
