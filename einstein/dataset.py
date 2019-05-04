@@ -9,15 +9,12 @@ Author:
 -----------
 Aashish Yadavally
 """
-import findspark
-findspark.init()
-
 import os
 import logging
 import datetime
 import numpy as np
 import pandas as pd
-from pyspark.sql import SparkSession
+from einstein.reader import read_csv
 
 
 # First reftime to be retrieved while fetching the data
@@ -45,7 +42,9 @@ class Loader:
     grid shape, set the target hour offset for predictions, drop the
     non-target hour offset and initialize the Spark Dataframe
     """
-    def __init__(self, target_hour=1, bucket='gs://uga_dsp_sp19',
+    def __init__(self, target_hour=1,
+                 encrypt_path='gs://profinal/',
+                 decrypt_path='gs://dsp_uga/',
                  filename='2017_3.csv'):
         """Initializes the :class: `Loader` and sets up the Spark Dataframe
         which can be used for model training
@@ -59,10 +58,16 @@ class Loader:
             filename (str):
                 Filename of the CSV file in Google Storage Bucket which is to
                 be read from
+            encrypt_path(str):
+                A google storage path where the enrypted files are stored
+            decrypt_path(str):
+                A google storage path where the key is stored and
+                decrypt files should be stored
         """
-        self.bucket = bucket
         self.filename = filename
         self.target_hour = target_hour
+        self.encrypt_path = encrypt_path
+        self.decrypt_path = decrypt_path
 
     def load_data(self):
         """Initializes a Pyspark SparkSession and loads the data into a Spark
@@ -72,10 +77,7 @@ class Loader:
             df (Spark DataFrame):
                 Dataset read into a Spark Dataframe
         """
-        spark = SparkSession.builder.master("yarn").appName(
-            "Solar Irradiance Prediction").getOrCreate()
-        self.df = spark.read.csv(os.path.join(self.bucket, self.filename),
-                                 header='true', inferSchema='true')
+        self.df = read_csv(self.filename, self.encrypt_path, self.decrypt_path)
         self.processed_df = self.process_data(self.df)
         self.input_cols = self.get_input_columns(self.processed_df)
         return self.processed_df

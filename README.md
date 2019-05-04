@@ -26,6 +26,7 @@ To copy the `einstein` project to the VM instance, there are two alternatives:
   `> gcloud compute scp --recurse /complete/link/to/repository/* <user>@<instance_name-vm>:~/`
 * The project directory can be compressed using the command: `> tar -zvcf einstein.tar.gz einstein`; the compressed folder can be uploaded into the VM instance using the `Upload File` option in the VM, and can further be decompressed using the command: `> tar -xzf einstein.tar.gz`. 
 
+Run the following command: `bash einstein/scripts/setup.sh` to setup the bash utilities for the project.
 
 
 ### Usage

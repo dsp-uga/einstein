@@ -11,11 +11,9 @@ findspark.init()
 
 from einstein.dataset import Loader
 from pyspark.sql import SparkSession
-
+from einstein.reader import read_csv
 
 L = Loader()
-SPARKSESSION = SparkSession.builder.master("yarn").appName(
-    "Solar Irradiance Prediction").getOrCreate()
 
 
 def test_load_data():
@@ -27,14 +25,14 @@ def test_load_data():
 
 
 def test_process_data():
-    data_frame = SPARKSESSION.read.csv(os.path.join(L.bucket, L.filename),
-                                       header='true', inferSchema='true')
+    data_frame = read_csv(L.filename)
     processed_df = L.process_data(data_frame)
     cols = processed_df.columns
     # Testing if 'label' column is present in the processed DataFrame
     assert 'label' in cols
 
-    y_cols = [('y' + str(offset)) for offset in range(1, 25) if offset != L.target_hour]
+    y_cols = [('y' + str(offset)) for offset in range(1, 25)
+              if offset != L.target_hour]
     # Testing if other target hour offset columns are present in the processed
     # Spark DataFrame
     for y_col in y_cols:
@@ -42,8 +40,7 @@ def test_process_data():
 
 
 def get_input_columns():
-    data_frame = SPARKSESSION.read.csv(os.path.join(L.bucket, L.filename),
-                                       header='true', inferSchema='true')
+    data_frame = read_csv(L.filename)
     processed_df = L.process_data(data_frame)
     # Testing if 'label' is present in input columns list
     assert 'label' not in L.get_input_columns(processed_df)

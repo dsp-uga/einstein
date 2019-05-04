@@ -32,3 +32,4 @@ echo ""
 echo "Activating einstein shell utility command..."
 echo ""
 source ~/.bashrc
+

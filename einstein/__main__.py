@@ -44,9 +44,13 @@ def get_parser():
                         choices=['1', '3', '5'], help='1 -> (1, 1) ;\
                         3 -> (3, 3); 5 -> (5, 5)\nGrid Size - Grid sizes\
                         around ATHENS location')
-    parser.add_argument('--bucket', dest='bucket', type=str,
-                        default='gs://uga_dsp_sp19/', help='Google Storage\
-                        Bucket address containing the dataset')
+    parser.add_argument('--encrypt_bucket', dest='encrypt_bucket', type=str,
+                        default='gs://profinal/', help='Google Storage\
+                        Bucket address containing the encrypted files')
+    parser.add_argument('--decrypt_bucket', dest='decrypt_bucket', type=str,
+                        default='gs://dsp_uga/', help='Google Storage\
+                        Bucket address containing the key text file and\
+                        where the decrypt files are saved')
     parser.add_argument('--year', dest='year', default='2017', type=str,
                         choices=['2017', '2018', '2017_2018'],
                         help='NAM-NMM data year range')
@@ -83,8 +87,8 @@ def get_parser():
                         (must be > 1.0) - parameter for Linear Regression,\
                         Ridge Regression, Lasso Regression')
     parser.add_argument('--isotonic', dest='isotonic', default='True',
-    	                type=bool, choices=[True, False],
-    					help='Isotonicity of model')
+                        type=bool, choices=[True, False],
+                        help='Isotonicity of model')
     parser.add_argument('--fm', dest='forecast_model', type=str, help='PVLib\
                         Forecast Model', default='NAM',
                         choices=['NAM', 'RAP', 'GFS', 'NDFD', 'HRRR'])
@@ -123,7 +127,9 @@ def run(args=None):
     else:
         filename = f'{args.year}_{args.grid}.csv'
 
-        loader = Loader(target_hour=args.target_hr, bucket=args.bucket,
+        loader = Loader(target_hour=args.target_hr,
+                        encrypt_path=args.encrypt_bucket,
+                        decrypt_path=args.decrypt_bucket,
                         filename=filename)
         df = loader.load_data().repartition(48)
         input_cols = loader.input_cols
@@ -167,6 +173,9 @@ def run(args=None):
 
         metrics = {'r-Squared': r2, 'Mean Absolute Error': mae,
                    'Root Mean Squared Error': rmse}
+        # Deleting the data from the bucket
+        subprocess.run(f'gsutil rm {args.decrypt_bucket}{filename}',
+                       shell=True)
         # Print the Regression Statistics Summary
         draw(args.year, args.target_hr, args.grid, model_name, metrics)
 
