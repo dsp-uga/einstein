@@ -13,8 +13,7 @@ findspark.init()
 from pyspark.sql import SparkSession
 
 
-def read_csv(file_name, encrypt_path='gs://profinal/',
-             decrypt_path='gs://dsp_uga/'):
+def read_csv(file_name, encrypt_path, decrypt_path):
     """Reads the spark dataframe
 
     Args:

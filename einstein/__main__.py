@@ -45,10 +45,10 @@ def get_parser():
                         3 -> (3, 3); 5 -> (5, 5)\nGrid Size - Grid sizes\
                         around ATHENS location')
     parser.add_argument('--encrypt_bucket', dest='encrypt_bucket', type=str,
-                        default='gs://profinal/', help='Google Storage\
+                        required=True, help='Google Storage\
                         Bucket address containing the encrypted files')
     parser.add_argument('--decrypt_bucket', dest='decrypt_bucket', type=str,
-                        default='gs://dsp_uga/', help='Google Storage\
+                        required=True, help='Google Storage\
                         Bucket address containing the key text file and\
                         where the decrypt files are saved')
     parser.add_argument('--year', dest='year', default='2017', type=str,

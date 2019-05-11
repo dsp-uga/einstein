@@ -42,10 +42,7 @@ class Loader:
     grid shape, set the target hour offset for predictions, drop the
     non-target hour offset and initialize the Spark Dataframe
     """
-    def __init__(self, target_hour=1,
-                 encrypt_path='gs://profinal/',
-                 decrypt_path='gs://dsp_uga/',
-                 filename='2017_3.csv'):
+    def __init__(self, target_hour, encrypt_path, decrypt_path, filename):
         """Initializes the :class: `Loader` and sets up the Spark Dataframe
         which can be used for model training
 
