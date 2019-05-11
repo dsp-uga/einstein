@@ -5,7 +5,7 @@ The goal of this project is to develop a pipeline which implements a variety of 
 
 ## Important Links
 *	[Getting Started]()
-* [Theory]()
+* [Theory](https://github.com/dsp-uga/einstein/wiki)
 *	[Contribution Guidelines](https://github.com/dsp-uga/einstein#contributing)
 *	[Contributors](https://github.com/dsp-uga/einstein#contributors)
 
@@ -52,4 +52,4 @@ We are always happy to look at improvements and new experiments, to ensure that 
 If you think something should be done differently (or is just-plain-broken), please create an issue.
 
 ## Contributors
-See the [Contributors]() file for details about individual contributions.
+See the [Contributors](https://github.com/aashishyadavally/einstein/blob/master/CONTRIBUTORS.md) file for details about individual contributions.
